@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spinner Wheel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="wheel-container">
+        <canvas id="wheel"> </canvas>
+      </div>
+      <div class="spin-indicator"></div>
+      <button class="spinBtn" id="spin-btn">Spin it!!!</button>
+    </div>
+    <div class="input-container">
+      <h2>Add names</h2>
+      <div class="text-box">
+        <textarea
+          name="names"
+          id="input-box"
+          cols="30"
+          rows="10"
+          placeholder=" Add new names and press the button below..."
+        ></textarea>
+      </div>
+      <button class="addBtn" id="add-btn">Add Names</button>
+      <div class="result" id="result"></div>
+      <button id="close" class="close-btn">X</button>
+    </div>
+
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"
+    ></script>
+    <script src="https://unpkg.com/chart.js-plugin-labels-dv/dist/chartjs-plugin-labels.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

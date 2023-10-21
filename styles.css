@@ -1,0 +1,131 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Lato', sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+}
+
+#wheel {
+  width: inherit;
+  height: inherit;
+}
+.container .spin-indicator {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  right: -15%;
+  top: 35%;
+  background-color: black;
+  clip-path: polygon(100% 15%, 0 50%, 100% 85%);
+}
+.container .spin-indicator::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  clip-path: polygon(96% 25%, 15% 50%, 96% 75%);
+}
+
+button {
+  border: none;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  font: inherit;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+}
+
+.spinBtn {
+  background-color: #1f18c8;
+  letter-spacing: 1.5px;
+  border-radius: 5px;
+  padding: 0.7em 2.5em;
+}
+
+.input-container {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  margin-left: 100px;
+}
+.input-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.input-container .result {
+  width: 500px;
+  height: 80px;
+  background-color: hsl(0, 0%, 15%);
+  border-radius: 10px;
+  margin-top: 10%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 24px;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: -100px;
+  left: -100px;
+  padding: 20px;
+}
+
+.input-container .close-btn {
+  position: absolute;
+  bottom: -40px;
+  right: -125px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 1px solid #b4b4b4;
+  font-size: xx-small;
+  padding-block: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  color: #b4b4b4;
+  cursor: pointer;
+}
+
+.input-container .close-btn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+.addBtn {
+  background-color: #1f18c8;
+  letter-spacing: 1.5px;
+  border-radius: 5px;
+  padding: 0.7em 2.5em;
+  margin-top: 1em;
+}
+textarea {
+  resize: none;
+  outline: none;
+  overflow: auto;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: inherit;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
