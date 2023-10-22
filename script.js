@@ -1,4 +1,6 @@
+// Waiting for the DOM to be fully loaded before executing the code
 document.addEventListener('DOMContentLoaded', function () {
+  // Getting necessary elements from the document
   const wheel = document.getElementById('wheel')
   const spinBtn = document.getElementById('spin-btn')
   const closeBtn = document.getElementById('close')
@@ -6,9 +8,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const textBox = document.getElementById('input-box')
   const showResult = document.getElementById('result')
 
+  // Initial data for the wheel
   const initialNames = ['Ibrahim', 'Jasim', 'Jisan', 'Rifat', 'Teebro']
   const initialColors = ['#4bc421', '#2d96ff', '#c12eee', '#ff9400', '#f22828']
   const options = {
+    // Options for the chart
     responsive: true,
     cutout: 20,
     animation: false,
@@ -30,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function () {
     },
   }
 
+  // Creating the initial chart
   let chart = new Chart(wheel, {
     type: 'pie',
     data: {
@@ -44,6 +49,8 @@ document.addEventListener('DOMContentLoaded', function () {
     },
     options: options,
   })
+
+  // Creating an array of objects to store angle data and other information
   let infoArray = initialNames.map((name, index) => {
     return {
       name,
@@ -52,9 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
       color: initialColors[index],
     }
   })
-  const pi = Math.PI
 
-  // function to create colors
+  // Function to generate random colors
   function getRandomColor() {
     const letters = '0123456789ABCDEF'
     let color = '#'
@@ -64,38 +70,34 @@ document.addEventListener('DOMContentLoaded', function () {
     return color
   }
 
-  // function to get the normalized angle value
-
-  function normAngel(angle) {
-    return angle - pi * 2 * Math.floor(angle / (2 * pi))
-  }
+  // Function to normalize the angle value
   function normAngelDeg(angle) {
     return angle - 360 * Math.floor(angle / 360)
   }
 
+  // Event listener for the close button
   closeBtn.addEventListener('click', e => {
     showResult.style.display = 'none'
     closeBtn.style.display = 'none'
   })
 
+  // Event listener for the add button
   addBtn.addEventListener('click', e => {
-    // get name from textarea to form names array
+    // Getting names from the text area and resetting the text area
     const values = textBox.value
     const names = values.split('\n')
-
-    // reset textarea
     textBox.value = ''
 
-    // create data_array of equal size data
+    // Creating data arrays and colors for the chart
     const dataArray = Array(names.length).fill(1)
     const colorsArray = names.map(i => getRandomColor())
     const pieAngle = 360 / dataArray.length
     let tempValue = -0.001
 
-    // create the info array with angle data and other
+    // Creating the info array with angle data and other information
     infoArray = names.map((name, index) => {
-      const minValue = parseFloat((tempValue + 0.001).toFixed(3)) // Convert to number
-      const maxValue = parseFloat(((index + 1) * pieAngle).toFixed(3)) // Convert to number
+      const minValue = parseFloat((tempValue + 0.001).toFixed(3))
+      const maxValue = parseFloat(((index + 1) * pieAngle).toFixed(3))
       tempValue = maxValue
 
       return {
@@ -105,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
         color: colorsArray[index],
       }
     })
-    console.log(infoArray)
 
     const data = {
       labels: names,
@@ -118,8 +119,8 @@ document.addEventListener('DOMContentLoaded', function () {
       ],
     }
 
+    // Destroying the old chart and creating a new one with the updated data
     const oldChart = Chart.getChart('wheel')
-
     if (oldChart) oldChart.destroy()
 
     chart = new Chart(wheel, {
@@ -129,52 +130,70 @@ document.addEventListener('DOMContentLoaded', function () {
     })
   })
 
+  // Function to find the winner based on the generated angle
   const resultFinder = angle => {
-    const angleDeg = (angle * 180) / Math.PI
-
     for (let item of infoArray) {
       const flag = item.minValue > item.maxValue
       if (
-        (angleDeg >= item.minValue && angleDeg <= item.maxValue && !flag) ||
-        (angleDeg >= item.minValue && flag)
+        (angle >= item.minValue && angle <= item.maxValue && !flag) ||
+        (angle >= item.minValue && flag)
       ) {
         showResult.style.display = 'flex'
         closeBtn.style.display = 'flex'
         showResult.innerHTML = ` ${item.name} is Winner!`
-        break // Once winner is found, exit the loop
+        break
       }
     }
 
-    // Update values outside the loop
+    // Updating the values of the infoArray based on the generated angle
     infoArray.forEach(item => {
-      item.minValue += parseFloat(angleDeg.toFixed(3))
+      item.minValue += parseFloat(angle.toFixed(3))
       item.minValue = normAngelDeg(item.minValue)
-      item.maxValue += parseFloat(angleDeg.toFixed(3))
+      item.maxValue += parseFloat(angle.toFixed(3))
       item.maxValue = normAngelDeg(item.maxValue)
     })
   }
 
+  // Event listener for the spin button
   spinBtn.addEventListener('click', () => {
+    // Disabling the spin button and hiding the close button and result display
     spinBtn.disabled = true
     closeBtn.style.display = 'none'
     showResult.style.display = 'none'
-    let radianAngle = Math.floor(Math.random() * 2 * pi)
-    // if (radianAngle > 2 * pi) radianAngle = radianAngle - 2 * pi
-    let currentRotation = normAngel(chart.options.rotation)
+
+    // Generating a random angle for the spin
+    let angle = Math.floor(Math.random() * 360)
+
+    // Getting the current rotation of the wheel
+    let currentRotation = normAngelDeg(chart.options.rotation)
+
+    // Initializing the rotation count and maximum count for the spin
     let rotationCount = 0
-    const maxCount = Math.floor(Math.random() * 5 + 15)
+    const maxCount = Math.floor(Math.random() * 5 + 5)
+
+    // Setting the rotation value for each step of the spin
     let rotation = 64
+
+    // Setting up the rotation interval for the spin animation
     const rotationInterval = setInterval(() => {
       chart.options.rotation =
         chart.options.rotation + rotation / (rotationCount + 1)
-      currentRotation++
+      currentRotation += rotation / (rotationCount + 1)
       chart.update()
-      if (currentRotation >= 2 * pi) {
+
+      // Checking if the rotation has completed a full circle
+      if (chart.options.rotation >= 360) {
         rotationCount++
-        currentRotation = currentRotation - pi * 2
+        currentRotation = currentRotation - 360
+        chart.options.rotation = chart.options.rotation - 360
       }
-      if (rotationCount >= maxCount && currentRotation >= radianAngle) {
-        resultFinder(normAngel(chart.options.rotation))
+
+      // Checking if the maximum count has been reached and if the current rotation exceeds the generated angle
+      if (rotationCount >= maxCount && currentRotation >= angle) {
+        // Calling the resultFinder function to determine the winner
+        resultFinder(normAngelDeg(angle + 90))
+
+        // Enabling the spin button and clearing the rotation interval
         spinBtn.disabled = false
         clearInterval(rotationInterval)
       }
